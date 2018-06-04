@@ -16,7 +16,7 @@ detector = dlib.get_frontal_face_detector()
 
 #result_path = './result/'
 
-#cv2.namedWindow('show', 0)
+# cv2.namedWindow('show', 0)
 
 def crop_lip(video_path, result_path, predictor):
     vc = cv2.VideoCapture(video_path)
@@ -27,11 +27,11 @@ def crop_lip(video_path, result_path, predictor):
     print (dir_name, file_name, sep=',', end=',')
 
     save_path = os.path.join(result_path, root_name, dir_name)
-
+    print(save_path)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    fourcc = cv2.VideoWriter_fourcc(*'x264')
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
     vw = cv2.VideoWriter(os.path.join(save_path, file_name), fourcc, 25.0, (120,120))
 
     # track bbox
@@ -105,7 +105,7 @@ def crop_lip(video_path, result_path, predictor):
         # cv2.imshow('show', img_bgr)
         # cv2.imshow('lip', img_lip)
         
-        #key = cv2.waitKey(1)
+        # key = cv2.waitKey(1)
         # if key == 27:
         #     exit()
     print('done')
