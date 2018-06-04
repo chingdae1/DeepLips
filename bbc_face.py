@@ -19,7 +19,6 @@ detector = dlib.get_frontal_face_detector()
 #cv2.namedWindow('show', 0)
 
 def crop_lip(video_path, result_path, predictor):
-    main_path
     vc = cv2.VideoCapture(video_path)
     # print (vc.get(cv2.CAP_PROP_FPS)) # all video have 25 fps
     root_name = video_path.split('/')[-3] # main / pretrain 
