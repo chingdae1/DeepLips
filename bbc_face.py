@@ -16,7 +16,7 @@ detector = dlib.get_frontal_face_detector()
 
 #result_path = './result/'
 
-cv2.namedWindow('show', 0)
+#cv2.namedWindow('show', 0)
 
 def crop_lip(video_path, result_path, predictor):
     main_path
@@ -103,12 +103,12 @@ def crop_lip(video_path, result_path, predictor):
         cv2.rectangle(img_bgr, (roiX1,roiY1), (roiX2,roiY2), (255,255,255), 2) # lip box
         # print ((roiX1, roiY1, roiX2-roiX1, roiY2-roiY1))
         
-        cv2.imshow('show', img_bgr)
-        cv2.imshow('lip', img_lip)
+        # cv2.imshow('show', img_bgr)
+        # cv2.imshow('lip', img_lip)
         
-        key = cv2.waitKey(1)
-        if key == 27:
-            exit()
+        #key = cv2.waitKey(1)
+        # if key == 27:
+        #     exit()
     print('done')
     vw.release()
     
