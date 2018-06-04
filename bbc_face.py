@@ -8,7 +8,7 @@ from collections import deque
 import shutil
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
+
 
 ### set dir path
 # main_path = './main/'
@@ -18,7 +18,7 @@ predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
 
 cv2.namedWindow('show', 0)
 
-def crop_lip(video_path, result_path):
+def crop_lip(video_path, result_path, predictor):
     main_path
     vc = cv2.VideoCapture(video_path)
     # print (vc.get(cv2.CAP_PROP_FPS)) # all video have 25 fps
@@ -113,8 +113,9 @@ def crop_lip(video_path, result_path):
     vw.release()
     
 
-def main(result_path, data_path):
+def main(result_path, data_path, landmark_path):
     ### mp4 path list
+    predictor = dlib.shape_predictor(landmark_path)
     list_video_in_main = sorted(glob(data_path+'/main/'+'*/*.mp4'))
     list_video_in_pretrain = sorted(glob(data_path+'/pretrain/'+'*/*.mp4'))
     
@@ -122,10 +123,10 @@ def main(result_path, data_path):
     list_txt_in_pretrain = glob(data_path+'/pretrain/'+'*/*.txt')
     
     for path in list_video_in_pretrain:
-        crop_lip(path, result_path)
+        crop_lip(path, result_path, predictor)
 
     for path in list_video_in_main:
-        crop_lip(path, result_path)
+        crop_lip(path, result_path, predictor)
 
     result_video = glob(result_path + '*/*/*.mp4')
 
@@ -151,4 +152,6 @@ if __name__ == '__main__':
     #/mnt/disks/new_disk
     result_path = sys.argv[2]
     #/home/chingdae123/DeepLips/data/data_cut
-    main(result_path, data_path)
+    landmark_path = sys.argv[3]
+    #landmark_path
+    main(result_path, data_path, landmark_path)
