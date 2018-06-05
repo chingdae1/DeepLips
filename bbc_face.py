@@ -31,7 +31,7 @@ def crop_lip(video_path, result_path, predictor):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
     vw = cv2.VideoWriter(os.path.join(save_path, file_name), fourcc, 25.0, (120,120))
 
     # track bbox
