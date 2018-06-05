@@ -151,7 +151,7 @@ def main(result_path, data_path, landmark_path, num_proccess, order):
         file_name = os.path.basename(path)
         save_path = os.path.join(result_path, root_name, dir_name)
         if os.path.join(save_path, file_name).replace('.txt', '.mp4') in result_video:
-            shutil.move(path, save_path)
+            shutil.copy(path, save_path)
         
 
     for path in list_txt_in_pretrain:
@@ -160,7 +160,7 @@ def main(result_path, data_path, landmark_path, num_proccess, order):
         file_name = os.path.basename(path)
         save_path = os.path.join(result_path, root_name, dir_name)
         if os.path.join(save_path, file_name).replace('.txt', '.mp4') in result_video:
-            shutil.move(path, save_path)
+            shutil.copy(path, save_path)
    
 if __name__ == '__main__':
     data_path = sys.argv[1]
