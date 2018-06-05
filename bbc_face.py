@@ -112,23 +112,39 @@ def crop_lip(video_path, result_path, predictor):
     vw.release()
     
 
-def main(result_path, data_path, landmark_path):
+def main(result_path, data_path, landmark_path, num_proccess, order):
     ### mp4 path list
+
     predictor = dlib.shape_predictor(landmark_path)
-    list_video_in_main = sorted(glob(data_path+'/main/'+'*/*.mp4'))
-    list_video_in_pretrain = sorted(glob(data_path+'/pretrain/'+'*/*.mp4'))
+    list_video_in_main = sorted(glob(os.path.join(data_path, 'main/', '*/*.mp4')))
+    list_video_in_pretrain = sorted(glob(os.path.join(data_path, 'pretrain/', '*/*.mp4')))
     
-    list_txt_in_main = glob(data_path+'/main/'+'*/*.txt')
-    list_txt_in_pretrain = glob(data_path+'/pretrain/'+'*/*.txt')
+    start_main = int(len(list_video_in_main)/num_proccess * order)
+    end_main = int(len(list_video_in_main)/num_proccess * (order+1))
+    start_pretrain = int(len(list_video_in_pretrain)/num_proccess * order)
+    end_pretrain = int(len(list_video_in_pretrain)/num_proccess * (order+1))
+
+    list_video_in_main = list_video_in_main[start_main: end_main]
+    list_video_in_pretrain = list_video_in_pretrain[start_pretrain: end_pretrain]
+
+    list_txt_in_main = sorted(glob(os.path.join(data_path, 'main/', '*/*.txt')))
+    list_txt_in_pretrain = sorted(glob(os.path.join(data_path, 'pretrain/', '*/*.txt')))
     
+    start_main = int(len(list_txt_in_main)/num_proccess * order)
+    end_main = int(len(list_txt_in_main)/num_proccess * (order+1))
+    start_pretrain = int(len(list_txt_in_pretrain)/num_proccess * order)
+    end_pretrain = int(len(list_txt_in_pretrain)/num_proccess * (order+1))
+
+    list_txt_in_main = list_txt_in_main[start_main: end_main]
+    list_txt_in_pretrain = list_txt_in_pretrain[start_pretrain: end_pretrain]
     for path in list_video_in_pretrain:
         crop_lip(path, result_path, predictor)
 
     for path in list_video_in_main:
         crop_lip(path, result_path, predictor)
 
-    result_video = glob(result_path + '*/*/*.mp4')
-
+    result_video = glob(os.path.join(result_path, '*/*/*.mp4'))
+    
     for path in list_txt_in_main:
         root_name = path.split('/')[-3] # main / pretrain 
         dir_name = path.split('/')[-2]
@@ -153,4 +169,6 @@ if __name__ == '__main__':
     #/home/chingdae123/DeepLips/data/data_cut
     landmark_path = sys.argv[3]
     #landmark_path
-    main(result_path, data_path, landmark_path)
+    num_proccess = int(sys.argv[4])
+    order = int(sys.argv[5])-1
+    main(result_path, data_path, landmark_path, num_proccess, order)
