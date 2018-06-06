@@ -33,7 +33,7 @@ def train(watch_input_tensor, target_tensor,
         watch, spell, 
         watch_optimizer, spell_optimizer, 
         criterion, train):
-    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     watch_optimizer.zero_grad()
     spell_optimizer.zero_grad()
