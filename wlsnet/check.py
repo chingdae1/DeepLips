@@ -5,7 +5,7 @@ import sys
 import os
 
 def videoProcess(path):
-    dirs = glob(os.path.join(path, '*/*.mp4'))
+    dirs = glob(os.path.join(path, '*/*/*.mp4'))
     largest = 0
     for index, dir in enumerate(dirs):
         cap = cv2.VideoCapture(dir)

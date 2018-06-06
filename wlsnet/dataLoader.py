@@ -64,7 +64,7 @@ class videoDataset(Dataset):
         return self.queries[idx], self.labels[idx]
 
 def videoProcess(path, videoMaxLen):
-    dirs = glob(os.path.join(path, '*/*.mp4'))
+    dirs = glob(os.path.join(path, '*/*/*.mp4'))
     dirs = sorted(dirs)
     results = torch.zeros(len(dirs), videoMaxLen, 120, 120)
     for index, dir in enumerate(dirs):
@@ -89,7 +89,7 @@ def videoProcess(path, videoMaxLen):
 
 def txtProcess(path, txtMaxLen):
     result = []
-    dirs = glob(os.path.join(path, '*/*.txt'))
+    dirs = glob(os.path.join(path, '*/*/*.txt'))
     dirs = sorted(dirs)
     for dir in dirs:
         with open(dir) as f:
