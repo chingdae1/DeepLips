@@ -6,8 +6,8 @@ from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
 import sys
 
-def get_dataloaders(path, batch_size, videomax, txtmax, ratio_of_validation=0.0001):
-    num_workers = 0 # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
+def get_dataloaders(path, batch_size, videomax, txtmax, worker, ratio_of_validation=0.0001):
+    num_workers = worker # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
     train_movie_dataset = videoDataset(path, videomax, txtmax)
     num_train = len(train_movie_dataset)
     split_point = int(ratio_of_validation*num_train)
@@ -79,7 +79,7 @@ def train(watch_input_tensor, target_tensor,
 
     return loss.item() / target_length
 
-def trainIters(n_iters, videomax, txtmax, data_path, batch_size, ratio_of_validation=0.0001, learning_rate_decay=2000, save_every=30, learning_rate=0.01):
+def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_of_validation=0.0001, learning_rate_decay=2000, save_every=30, learning_rate=0.01):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     watch = Watch(3, 512, 512)
@@ -96,7 +96,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, ratio_of_valida
     spell_scheduler = optim.lr_scheduler.StepLR(spell_optimizer, step_size=learning_rate_decay, gamma=0.1)
     criterion = nn.CrossEntropyLoss(ignore_index=38)
 
-    train_loader, eval_loader = get_dataloaders(data_path, batch_size, videomax, txtmax, ratio_of_validation=ratio_of_validation)
+    train_loader, eval_loader = get_dataloaders(data_path, batch_size, videomax, txtmax, worker, ratio_of_validation=ratio_of_validation)
     # train_loader = DataLoader(dataset=dataset,
     #                     batch_size=batch_size,
     #                     shuffle=True)
@@ -113,6 +113,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, ratio_of_valida
         spell = spell.train()
 
         for i, (data, labels) in enumerate(train_loader):
+            print('데이터 크기', data.size())
             loss = train(data.to(device), labels.to(device),
                         watch, spell,
                         watch_optimizer, spell_optimizer,
@@ -139,8 +140,9 @@ if __name__ == '__main__':
     txtmax = int(sys.argv[3])
     data_path = sys.argv[4]
     batch_size = int(sys.argv[5])
-    ratio_of_validation = float(sys.argv[6])
-    learning_rate_decay = int(sys.argv[7])
-    save_every = int(sys.argv[8])
-    learning_rate = float(sys.argv[9])
-    trainIters(num_iterates, videomax, txtmax, data_path, batch_size, ratio_of_validation, learning_rate_decay, save_every, learning_rate)
+    worker = int(sys.argv[6])
+    ratio_of_validation = float(sys.argv[7])
+    learning_rate_decay = int(sys.argv[8])
+    save_every = int(sys.argv[9])
+    learning_rate = float(sys.argv[10])
+    trainIters(num_iterates, videomax, txtmax, data_path, batch_size, worker, ratio_of_validation, learning_rate_decay, save_every, learning_rate)

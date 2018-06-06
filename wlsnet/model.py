@@ -22,8 +22,8 @@ class Watch(nn.Module):
         '''
         size = list(x.size())
 
-        assert len(size) == 4, 'video input size is wrong'
-        assert size[2:] == [120, 120], 'image size should 120 * 120'
+        # assert len(size) == 4, 'video input size is wrong'
+        # assert size[2:] == [120, 120], 'image size should 120 * 120'
 
         outputs = []
         for i in range(size[1] - 4):
