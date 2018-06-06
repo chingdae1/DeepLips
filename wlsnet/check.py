@@ -2,6 +2,7 @@ import numpy as np
 from glob import glob
 import cv2
 import sys
+import os
 
 def videoProcess(path):
     dirs = glob(os.path.join(path, '*/*.mp4'))
