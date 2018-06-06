@@ -113,7 +113,6 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
         spell = spell.train()
 
         for i, (data, labels) in enumerate(train_loader):
-            print("텍스트 사이즈", labels.size())
             loss = train(data.to(device), labels.to(device),
                         watch, spell,
                         watch_optimizer, spell_optimizer,

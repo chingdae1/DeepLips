@@ -88,12 +88,12 @@ def videoProcess(dir, videoMaxLen):
     return results
 
 def txtProcess(dir, txtMaxLen):
-    result = []
+    tmp = []
     with open(dir) as f:
         tmp = [one_hot[i] for i in f.readline().split(':')[1].replace(' ', '').rstrip('\n')] + [one_hot['<eos>']]
         
         if len(tmp) < txtMaxLen:
-            result.append(tmp+[one_hot['<pad>'] for _ in range(txtMaxLen - len(tmp))])
+            tmp += [one_hot['<pad>'] for _ in range(txtMaxLen - len(tmp))]
         
         else:
             print(tmp)
@@ -103,7 +103,7 @@ def txtProcess(dir, txtMaxLen):
     
     # for i in range(dataLen):
     #     vector[i, np.arange(txtMaxLen), result[i]] = 1
-    return torch.Tensor(result)
+    return torch.Tensor(tmp)
 
 # def to_int():
 #     data_dict = dict(zip(int_list, char_list))
