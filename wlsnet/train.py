@@ -113,7 +113,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
         spell = spell.train()
 
         for i, (data, labels) in enumerate(train_loader):
-            loss = train(data, labels,
+            loss = train(data.to(device), labels.to(device),
                         watch, spell,
                         watch_optimizer, spell_optimizer,
                         criterion, True)
@@ -125,7 +125,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
         spell = spell.eval()
 
         for k, (data, labels) in enumerate(eval_loader):
-            loss = train(data, labels, watch, spell, watch_optimizer, spell_optimizer, criterion, False)
+            loss = train(data.to(device), labels.to(device), watch, spell, watch_optimizer, spell_optimizer, criterion, False)
             avg_eval_loss += loss
 
             del data, labels, loss
