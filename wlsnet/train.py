@@ -7,7 +7,7 @@ import numpy as np
 import sys
 
 def get_dataloaders(path, batch_size, videomax, txtmax, ratio_of_validation=0.0001):
-    num_workers = 4 # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
+    num_workers = 0 # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
     train_movie_dataset = videoDataset(path, videomax, txtmax)
     num_train = len(train_movie_dataset)
     split_point = int(ratio_of_validation*num_train)
