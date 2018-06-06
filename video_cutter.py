@@ -35,6 +35,7 @@ class Parser:
             self.all_text.append(this_text_list)
 
     def slice_video(self, output_dir):
+        print(len(self.start_list))
         for f_idx in range(len(self.all_xml)):
             for i in range(len(self.all_video[f_idx])):
                 start = self.start_list[f_idx][i]
