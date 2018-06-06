@@ -4,6 +4,7 @@ from dataLoader import to_int, videoDataset
 from model import Watch, Spell
 from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
+import sys
 
 def get_dataloaders(path, batch_size, videomax, txtmax, ratio_of_validation=0.0001):
     num_workers = 4 # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
