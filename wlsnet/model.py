@@ -21,7 +21,7 @@ class Watch(nn.Module):
             (batch_size, time_sequence, 120, 120) 
         '''
         size = list(x.size())
-        print(size)
+        
         # assert len(size) == 4, 'video input size is wrong'
         # assert size[2:] == [120, 120], 'image size should 120 * 120'
 
