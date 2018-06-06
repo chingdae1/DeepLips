@@ -84,8 +84,9 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
 
     watch = Watch(3, 512, 512)
     spell = Spell(num_layers=3, output_size=40, hidden_size=512)
-    watch = nn.parallel.DistributedDataParallel(watch).to(device)
-    spell = nn.parallel.DistributedDataParallel(spell).to(device)
+    
+    watch = nn.DataParallel(watch).to(device)
+    spell = nn.DataParallel(spell).to(device)
 
     watch_optimizer = optim.Adam(watch.parameters(),
                     lr=learning_rate)
