@@ -64,7 +64,7 @@ class videoDataset(Dataset):
         return len(self.queries)
 
     def __getitem__(self, idx):
-        return videoProcess(self.queries[idx], self.videoMaxLen), txtProcess(self.labels[idx], txtMaxLen)
+        return videoProcess(self.queries[idx], self.videoMaxLen), txtProcess(self.labels[idx], self.txtMaxLen)
 
 def videoProcess(dir, videoMaxLen):
     cap = cv2.VideoCapture(dir)
