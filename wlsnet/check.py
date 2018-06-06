@@ -8,6 +8,7 @@ def videoProcess(path):
     dirs = glob(os.path.join(path, '*/*/*.mp4'))
     largest = 0
     for index, dir in enumerate(dirs):
+        print(index)
         cap = cv2.VideoCapture(dir)
         tmp = []
         while(True):
@@ -24,6 +25,7 @@ def videoProcess(path):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         if largest < len(tmp):
+            print(len(tmp))
             largest = len(tmp)
     cap.release()
     print(largest)
