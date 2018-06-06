@@ -69,7 +69,7 @@ class videoDataset(Dataset):
 def videoProcess(dir, videoMaxLen):
     cap = cv2.VideoCapture(dir)
     tmp = []
-    results = torch.zeros(1, videoMaxLen, 120, 120)
+    results = torch.zeros(videoMaxLen, 120, 120)
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -83,7 +83,7 @@ def videoProcess(dir, videoMaxLen):
             break
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-    results[:, :len(tmp), :, :] = torch.from_numpy(np.concatenate(tmp, axis=0).reshape(1, -1, 120, 120))
+    results[:len(tmp), :, :] = torch.from_numpy(np.concatenate(tmp, axis=0).reshape(-1, 120, 120))
     cap.release()
     return results
 
