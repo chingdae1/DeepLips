@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torch.utils.checkpoint import checkpoint_sequential
 
 class Watch(nn.Module):
     '''
@@ -213,4 +214,4 @@ class Encoder(nn.Module):
         self.fc = nn.Linear(4608, 512)
 
     def forward(self, x):
-        return self.fc(self.encoder(x).view(x.size(0), -1))
+        return self.fc(checkpoint_sequential(self.encoder, len(self.encoder), x).view(x.size(0), -1))
