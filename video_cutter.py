@@ -1,6 +1,6 @@
 import glob
 from xml.etree.ElementTree import parse
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+# from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 import moviepy.editor as mpy
 import os
 import sys
