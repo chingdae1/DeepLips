@@ -32,7 +32,7 @@ def get_dataloaders(path, batch_size, videomax, txtmax, worker, ratio_of_validat
 def train(watch_input_tensor, target_tensor,
         watch, spell, 
         watch_optimizer, spell_optimizer, 
-        criterion, device, train):
+        criterion, train):
     
 
     watch_optimizer.zero_grad()
@@ -113,18 +113,22 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
         spell = spell.train()
 
         for i, (data, labels) in enumerate(train_loader):
-            loss = train(data.to(device), labels.to(device),
+            loss = train(data, labels,
                         watch, spell,
                         watch_optimizer, spell_optimizer,
-                        criterion, device, True)
+                        criterion, True)
             avg_loss += loss
+            
+            del data, labels, loss
         
         watch = watch.eval()
         spell = spell.eval()
 
         for k, (data, labels) in enumerate(eval_loader):
-            loss = train(data.to(device), labels.to(device), watch, spell, watch_optimizer, spell_optimizer, criterion, device, False)
+            loss = train(data, labels, watch, spell, watch_optimizer, spell_optimizer, criterion, False)
             avg_eval_loss += loss
+
+            del data, labels, loss
         
         print('epoch:', epoch, ' train_loss:', float(avg_loss/total_batch))
         print('epoch:', epoch, ' eval_loss:', float(avg_eval_loss/total_eval_batch))
