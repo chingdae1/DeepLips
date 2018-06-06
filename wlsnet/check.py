@@ -75,6 +75,7 @@ def videoProcess(path):
     # print('longest video', largest)
 
     longest = 0
+    dirr = ''
     dirs = glob(os.path.join(path, '*/*/*.txt'))
     dirs = sorted(dirs)
     for dir in dirs:
@@ -83,6 +84,7 @@ def videoProcess(path):
             
             if longest < len(tmp):
                 longest = len(tmp)
+                dirr = dir
     print('longest text', longest)
 
 if __name__ == '__main__':
