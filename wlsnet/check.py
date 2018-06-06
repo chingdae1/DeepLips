@@ -86,6 +86,7 @@ def videoProcess(path):
                 longest = len(tmp)
                 dirr = dir
     print('longest text', longest)
+    print(dirr)
 
 if __name__ == '__main__':
     path = sys.argv[1]
