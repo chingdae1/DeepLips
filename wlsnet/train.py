@@ -130,3 +130,16 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, ratio_of_valida
         if epoch % save_every == 0 and epoch != 0:
             torch.save(watch, 'watch{}.pt'.format(epoch))
             torch.save(spell, 'spell{}.pt'.format(epoch))
+
+
+if __name__ == '__main__':
+    num_iterates = int(sys.argv[1])
+    videomax = int(sys.argv[2])
+    txtmax = int(sys.argv[3])
+    data_path = sys.argv[4]
+    batch_size = int(sys.argv[5])
+    ratio_of_validation = float(sys.argv[6])
+    learning_rate_decay = int(sys.argv[7])
+    save_every = int(sys.argv[8])
+    learning_rate = int(sys.argv[9])
+    trainIters(n_iters, videomax, txtmax, data_path, batch_size, ratio_of_validation, learning_rate_decay, save_every, learning_rate)
