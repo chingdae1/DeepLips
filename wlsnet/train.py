@@ -142,5 +142,5 @@ if __name__ == '__main__':
     ratio_of_validation = float(sys.argv[6])
     learning_rate_decay = int(sys.argv[7])
     save_every = int(sys.argv[8])
-    learning_rate = int(sys.argv[9])
+    learning_rate = float(sys.argv[9])
     trainIters(n_iters, videomax, txtmax, data_path, batch_size, ratio_of_validation, learning_rate_decay, save_every, learning_rate)
