@@ -41,7 +41,7 @@ def train(watch_input_tensor, target_tensor,
     target_length = target_tensor.size(1)
 
     loss = 0
-
+    print(watch_input_tensor.is_cuda())
     watch_outputs, watch_state = watch(watch_input_tensor)
     #sos token
     spell_input = torch.tensor([[one_hot['<sos>']]]).repeat(watch_outputs.size(0), 1)
