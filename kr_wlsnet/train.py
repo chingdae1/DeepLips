@@ -1,6 +1,6 @@
 import torch
 from torch import nn, optim
-from dataLoader import to_char, videoDataset, one_hot
+from dataLoader import to_char, videoDataset, one_hot, int_list
 from model import Watch, Spell
 from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
@@ -83,7 +83,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     watch = Watch(3, 512, 512)
-    spell = Spell(num_layers=3, output_size=40, hidden_size=512)
+    spell = Spell(num_layers=3, output_size=len(int_list), hidden_size=512)
     
     watch = watch.to(device)
     spell = spell.to(device)
@@ -119,7 +119,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
                         watch_optimizer, spell_optimizer,
                         criterion, True)
             avg_loss += loss
-            
+            print('Batch : ', i + 1, '/', total_batch, ', ERROR in this minibatch: ', loss)
             del data, labels, loss
         
         watch = watch.eval()
@@ -128,7 +128,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
         for k, (data, labels) in enumerate(eval_loader):
             loss = train(data.to(device), labels.to(device), watch, spell, watch_optimizer, spell_optimizer, criterion, False)
             avg_eval_loss += loss
-
+            print('Batch : ', i + 1, '/', total_batch, ', Validation ERROR in this minibatch: ', loss)
             del data, labels, loss
         
         print('epoch:', epoch, ' train_loss:', float(avg_loss/total_batch))

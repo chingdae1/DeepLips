@@ -129,7 +129,8 @@ def main(result_path, data_path, landmark_path, num_proccess, order):
 
     list_txt_in_main = sorted(glob(os.path.join(data_path, 'main/', '*/*.txt')))
     list_txt_in_pretrain = sorted(glob(os.path.join(data_path, 'pretrain/', '*/*.txt')))
-    
+    print(os.path.join(data_path, 'main/', '*/*.txt'))
+    print(list_txt_in_main)
     start_main = int(len(list_txt_in_main)/num_proccess * order)
     end_main = int(len(list_txt_in_main)/num_proccess * (order+1))
     start_pretrain = int(len(list_txt_in_pretrain)/num_proccess * order)
@@ -137,11 +138,11 @@ def main(result_path, data_path, landmark_path, num_proccess, order):
 
     list_txt_in_main = list_txt_in_main[start_main: end_main]
     list_txt_in_pretrain = list_txt_in_pretrain[start_pretrain: end_pretrain]
-    for path in list_video_in_pretrain:
-        crop_lip(path, result_path, predictor)
+    # for path in list_video_in_pretrain:
+    #     crop_lip(path, result_path, predictor)
 
-    for path in list_video_in_main:
-        crop_lip(path, result_path, predictor)
+    # for path in list_video_in_main:
+    #     crop_lip(path, result_path, predictor)
 
     result_video = glob(os.path.join(result_path, '*/*/*.mp4'))
     

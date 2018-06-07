@@ -4,48 +4,45 @@ import numpy as np
 import os
 import cv2
 from glob import glob
+import hgtk
 
 char_list = (
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-    'W',
-    'X',
-    'Y',
-    'Z',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '0',
+    'ㄱ',
+    'ㄴ',
+    'ㄷ',
+    'ㄹ',
+    'ㅁ',
+    'ㅂ',
+    'ㅅ',
+    'ㅇ',
+    'ㅈ',
+    'ㅊ',
+    'ㅋ',
+    'ㅌ',
+    'ㅍ',
+    'ㅎ',
+    'ㅛ',
+    'ㅕ',
+    'ㅑ',
+    'ㅐ',
+    'ㅔ',
+    'ㅗ',
+    'ㅓ',
+    'ㅏ',
+    'ㅣ',
+    'ㅠ',
+    'ㅜ',
+    'ㅡ',
+    'ㅃ',
+    'ㅉ',
+    'ㄸ',
+    'ㄲ',
+    'ㅆ',
+    'ㅒ',
+    'ㅖ',
     '<sos>',
     '<eos>',
-    '<pad>',
-    '\'',
+    '<pad>'
 )
 
 int_list = [i for i in range(len(char_list))]
@@ -88,15 +85,16 @@ def videoProcess(dir, videoMaxLen):
     return results
 
 def txtProcess(dir, txtMaxLen):
-    tmp = []
+    result = []
     with open(dir) as f:
-        tmp = [one_hot[i] for i in f.readline().split(':')[1].replace(' ', '').rstrip('\n')] + [one_hot['<eos>']]
-        
-        if len(tmp) < txtMaxLen:
-            tmp += [one_hot['<pad>'] for _ in range(txtMaxLen - len(tmp))]
-        
+        tmp = [i for i in f.readline().split(':')[1].replace(' ', '').replace('.', '').replace(',', '').replace('\"', '').replcae('\'', '').rstrip('\n')]
+        for i in tmp:
+            result += [one_hot[i] for i in hgtk.letter.decompose(i)]
+        result += [one_hot['<eos>']]
+        if len(result) < txtMaxLen:
+            result += [one_hot['<pad>'] for _ in range(txtMaxLen - len(tmp))]
         else:
-            print(tmp)
+            print(result)
             raise Exception('too short txt max length')
     # dataLen = len(result)
     # vector = torch.zeros((dataLen, txtMaxLen))
