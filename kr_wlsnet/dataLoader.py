@@ -95,7 +95,7 @@ def txtProcess(dir, txtMaxLen):
         tmp = [i for i in f.readline().replace(' ', '').replace('.', '').replace(',', '').replace('\"', '').replace('\'', '').rstrip('\n')]
         
         for i in tmp:
-            result += [i for i in hgtk.letter.decompose(i) if i is not '']
+            result += [ont_hot[i] for i in hgtk.letter.decompose(i) if i is not '']
         result += [one_hot['<eos>']]
         if len(result) < txtMaxLen:
             result += [one_hot['<pad>'] for _ in range(txtMaxLen - len(tmp))]
@@ -107,5 +107,4 @@ def txtProcess(dir, txtMaxLen):
     
     # for i in range(dataLen):
     #     vector[i, np.arange(txtMaxLen), result[i]] = 1
-    print(result)
     return torch.Tensor(result)
