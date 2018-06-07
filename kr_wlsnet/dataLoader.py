@@ -95,7 +95,7 @@ def txtProcess(dir, txtMaxLen):
         tmp = [i for i in f.readline().replace(' ', '').replace('.', '').replace(',', '').replace('\"', '').replace('\'', '').rstrip('\n')]
         
         for i in tmp:
-            result += [ont_hot[i] for i in hgtk.letter.decompose(i) if i is not '']
+            result += [one_hot[i] for i in hgtk.letter.decompose(i) if i is not '']
         result += [one_hot['<eos>']]
         if len(result) < txtMaxLen:
             result += [one_hot['<pad>'] for _ in range(txtMaxLen - len(tmp))]
