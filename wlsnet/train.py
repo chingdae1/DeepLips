@@ -56,7 +56,7 @@ def train(watch_input_tensor, target_tensor,
             spell_output, spell_hidden, cell_state, context = spell(
                 spell_input, spell_hidden, cell_state, watch_outputs, context)
             topv, topi = spell_output.topk(1, dim=2)
-            spell_input = target_tensor[:, di].long().unsqueeze(1)
+            spell_input = target_tensor[:, di].long().unsqueeze(1).detach()
             
             loss += criterion(spell_output.squeeze(1), target_tensor[:, di].long())
         loss = loss.to(device)
@@ -75,7 +75,6 @@ def train(watch_input_tensor, target_tensor,
             #     print('output : ', to_char[int(topi.squeeze(1)[0])], 'label : ', to_char[int(target_tensor[0, di])])
 
             loss += criterion(spell_output.squeeze(1), target_tensor[:, di].long())
-    
 
     return loss.item() / target_length
 
@@ -85,8 +84,8 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
     watch = Watch(3, 512, 512)
     spell = Spell(num_layers=3, output_size=40, hidden_size=512)
     
-    watch = watch.to(device)
-    spell = spell.to(device)
+    watch = nn.DataParallel(watch).to(device)
+    spell = nn.DataParallel(spell).to(device)
 
     watch_optimizer = optim.Adam(watch.parameters(),
                     lr=learning_rate)
