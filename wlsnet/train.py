@@ -44,7 +44,7 @@ def train(watch_input_tensor, target_tensor,
 
     watch_outputs, watch_state = watch(watch_input_tensor)
     #sos token
-    spell_input = torch.tensor([[one_hot['<sos>']]).repeat(watch_outputs.size(0), 1).to(device)
+    spell_input = torch.tensor([[one_hot['<sos>']]]]).repeat(watch_outputs.size(0), 1).to(device)
     spell_hidden = watch_state.to(device)
     cell_state = torch.zeros_like(spell_hidden).to(device)
     context = torch.zeros(watch_outputs.size(0), 1, spell_hidden.size(2)).to(device)
