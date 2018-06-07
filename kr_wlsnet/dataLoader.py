@@ -100,7 +100,7 @@ def txtProcess(dir, txtMaxLen):
     result = []
     with open(dir) as f:
         tmp = [i for i in f.readline().replace(' ', '').replace('.', '').replace(',', '').replace('\"', '').replace('\'', '').rstrip('\n')]
-        
+        print(tmp)
         for i in tmp:
             result += [one_hot[i] for i in hgtk.letter.decompose(i) if i is not '']
         result += [one_hot['<eos>']]
