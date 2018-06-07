@@ -6,6 +6,8 @@ from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
 import sys
 
+torch.backends.cudnn.enabled = True
+
 def get_dataloaders(path, batch_size, videomax, txtmax, worker, ratio_of_validation=0.0001):
     num_workers = worker # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
     train_movie_dataset = videoDataset(path, videomax, txtmax)
