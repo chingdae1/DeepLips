@@ -33,7 +33,7 @@ class Watch(nn.Module):
         x = torch.cat(outputs, dim=1)
         outputs, states = self.lstm(x)
 
-        return (outputs, states[0])
+        return (outputs.cpu(), states[0])
 
 class Listen(nn.Module):
     '''
