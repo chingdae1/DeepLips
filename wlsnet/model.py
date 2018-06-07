@@ -31,8 +31,13 @@ class Watch(nn.Module):
             outputs.append(self.encoder(x[:, i:i+5, :, :]).unsqueeze(1))
         outputs.reverse()
         x = torch.cat(outputs, dim=1)
+        print("WATCH before flatten")
         self.lstm.flatten_parameters()
+        print("WATCH after flatten")
         outputs, states = self.lstm(x)
+        print("WATCH after lstm")
+        print(outputs.size())
+        print(states.size())
 
         return (outputs, states[0])
 
