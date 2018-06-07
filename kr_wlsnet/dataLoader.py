@@ -40,6 +40,11 @@ char_list = (
     'ㅆ',
     'ㅒ',
     'ㅖ',
+    'ㄻ',
+    'ㄶ',
+    'ㄼ',
+    'ㅀ',
+    'ㄺ',
     '<sos>',
     '<eos>',
     '<pad>'
@@ -88,9 +93,9 @@ def txtProcess(dir, txtMaxLen):
     result = []
     with open(dir) as f:
         tmp = [i for i in f.readline().replace(' ', '').replace('.', '').replace(',', '').replace('\"', '').replace('\'', '').rstrip('\n')]
-        print(tmp)
+        
         for i in tmp:
-            result += [one_hot[i] for i in hgtk.letter.decompose(i)]
+            result += [i for i in hgtk.letter.decompose(i) if i is not '']
         result += [one_hot['<eos>']]
         if len(result) < txtMaxLen:
             result += [one_hot['<pad>'] for _ in range(txtMaxLen - len(tmp))]
