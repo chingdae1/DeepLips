@@ -31,7 +31,7 @@ class Watch(nn.Module):
             outputs.append(self.encoder(x[:, i:i+5, :, :]).unsqueeze(1))
         outputs.reverse()
         x = torch.cat(outputs, dim=1)
-        self.lstm.flatten_parameters()
+        # self.lstm.flatten_parameters()
         outputs, states = self.lstm(x)
 
         return (outputs, states[0])
@@ -121,7 +121,7 @@ class Spell(nn.Module):
         '''
         input = self.embedded(input)
         concatenated = torch.cat([input, context], dim=2)
-        self.lstm.flatten_parameters()
+        #self.lstm.flatten_parameters()
         output, (hidden_state, cell_state) = self.lstm(concatenated, (hidden_state, cell_state))
         context = self.attentionVideo(hidden_state[-1], watch_outputs)
         
@@ -147,7 +147,6 @@ class Attention(nn.Module):
 
     def forward(self, prev_hidden_state, annotations):
         '''
-
         1. expand prev_hidden_state dimension and transpose
             prev_hidden_state : (batch_size, sequence_length, feature dimension(512)) 
         
