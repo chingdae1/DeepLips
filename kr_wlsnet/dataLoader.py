@@ -107,4 +107,4 @@ def txtProcess(dir, txtMaxLen):
     
     # for i in range(dataLen):
     #     vector[i, np.arange(txtMaxLen), result[i]] = 1
-    return torch.Tensor(tmp)
+    return torch.Tensor(result)
