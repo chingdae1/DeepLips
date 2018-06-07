@@ -41,24 +41,24 @@ def train(watch_input_tensor, target_tensor,
     target_length = target_tensor.size(1)
 
     loss = 0
-    print(watch_input_tensor.is_cuda)
+
     watch_outputs, watch_state = watch(watch_input_tensor)
     #sos token
     spell_input = torch.tensor([[one_hot['<sos>']]]).repeat(watch_outputs.size(0), 1)
-    spell_hidden = watch_state
-    cell_state = torch.zeros_like(spell_hidden)
-    context = torch.zeros(watch_outputs.size(0), 1, spell_hidden.size(2))
+    spell_hidden = watch_state.to(device)
+    cell_state = torch.zeros_like(spell_hidden).to(device)
+    context = torch.zeros(watch_outputs.size(0), 1, spell_hidden.size(2)).to(device)
 
     # test = [spell_hidden]
     # Without teacher forcing: use its own predictions as the next input
     if train:
         for di in range(target_length):
             spell_output, spell_hidden, cell_state, context = spell(
-                spell_input.to(device), spell_hidden.to(device), cell_state.to(device), watch_outputs.to(device), context.to(device))
+                spell_input.to(device), spell_hidden, cell_state, watch_outputs, context)
             topv, topi = spell_output.topk(1, dim=2)
             spell_input = target_tensor[:, di].long().unsqueeze(1)
-
-            loss += criterion(spell_output.squeeze(1), target_tensor[:, di].long().to(device))
+            
+            loss += criterion(spell_output.squeeze(1), target_tensor[:, di].long())
         loss = loss.to(device)
         loss.backward()
 
@@ -113,7 +113,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
 
         for i, (data, labels) in enumerate(train_loader):
 
-            loss = train(data.to(device), labels,
+            loss = train(data.to(device), labels.to(device),
                         watch, spell,
                         watch_optimizer, spell_optimizer,
                         criterion, True)
@@ -125,7 +125,7 @@ def trainIters(n_iters, videomax, txtmax, data_path, batch_size, worker, ratio_o
         spell = spell.eval()
 
         for k, (data, labels) in enumerate(eval_loader):
-            loss = train(data.to(device), labels, watch, spell, watch_optimizer, spell_optimizer, criterion, False)
+            loss = train(data.to(device), labels.to(device), watch, spell, watch_optimizer, spell_optimizer, criterion, False)
             avg_eval_loss += loss
 
             del data, labels, loss

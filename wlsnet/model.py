@@ -33,7 +33,7 @@ class Watch(nn.Module):
         x = torch.cat(outputs, dim=1)
         outputs, states = self.lstm(x)
 
-        return (outputs.cpu(), states[0])
+        return (outputs, states[0])
 
 class Listen(nn.Module):
     '''
@@ -125,7 +125,7 @@ class Spell(nn.Module):
         
         output = self.mlp(torch.cat([output, context], dim=2))
         
-        return output, hidden_state.cpu(), cell_state.cpu(), context.cpu()
+        return output, hidden_state, cell_state, context
 
 class Attention(nn.Module):
     '''
