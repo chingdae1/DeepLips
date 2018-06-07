@@ -87,7 +87,7 @@ def videoProcess(dir, videoMaxLen):
 def txtProcess(dir, txtMaxLen):
     result = []
     with open(dir) as f:
-        tmp = [i for i in f.readline().replace(' ', '').replace('.', '').replace(',', '').replace('\"', '').replcae('\'', '').rstrip('\n')]
+        tmp = [i for i in f.readline().replace(' ', '').replace('.', '').replace(',', '').replace('\"', '').replace('\'', '').rstrip('\n')]
         for i in tmp:
             result += [one_hot[i] for i in hgtk.letter.decompose(i)]
         result += [one_hot['<eos>']]
