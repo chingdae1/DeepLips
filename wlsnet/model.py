@@ -125,7 +125,7 @@ class Spell(nn.Module):
         
         output = self.mlp(torch.cat([output, context], dim=2))
         
-        return output, hidden_state, cell_state, context
+        return output, hidden_state.cpu(), cell_state.cpu(), context.cpu()
 
 class Attention(nn.Module):
     '''
