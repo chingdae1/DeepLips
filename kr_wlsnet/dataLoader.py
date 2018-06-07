@@ -52,6 +52,7 @@ char_list = (
     'ㅚ',
     'ㅞ',
     'ㅢ',
+    'ㅄ',
     '<sos>',
     '<eos>',
     '<pad>'
@@ -105,7 +106,7 @@ def txtProcess(dir, txtMaxLen):
             result += [one_hot[i] for i in hgtk.letter.decompose(i) if i is not '']
         result += [one_hot['<eos>']]
         if len(result) < txtMaxLen:
-            result += [one_hot['<pad>'] for _ in range(txtMaxLen - len(tmp))]
+            result += [one_hot['<pad>'] for _ in range(txtMaxLen - len(result))]
         else:
             print(result)
             raise Exception('too short txt max length')
