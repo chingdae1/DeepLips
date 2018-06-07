@@ -34,6 +34,7 @@ class Watch(nn.Module):
         print("WATCH before flatten")
         self.lstm.flatten_parameters()
         print("WATCH after flatten")
+        print(x.size())
         outputs, states = self.lstm(x)
         print("WATCH after lstm")
         print(outputs.size())
