@@ -40,10 +40,7 @@ def train(watch_input_tensor, target_tensor,
     spell = watch.to(device)
     watch_input_tensor = watch_input_tensor.to(device)
     target_tensor = target_tensor.to(device)
-    spell_input = torch.tensor([[charSet.get_index_of('<sos>')]]).repeat(watch_outputs.size(0), 1).to(device)
-    spell_hidden = watch_state.to(device)
-    cell_state = torch.zeros_like(spell_hidden).to(device)
-    context = torch.zeros(watch_outputs.size(0), 1, spell_hidden.size(2)).to(device)
+    
 
     print('train step')
     watch_optimizer.zero_grad()
@@ -54,7 +51,10 @@ def train(watch_input_tensor, target_tensor,
     loss = 0
 
     watch_outputs, watch_state = watch(watch_input_tensor)
-
+    spell_input = torch.tensor([[charSet.get_index_of('<sos>')]]).repeat(watch_outputs.size(0), 1).to(device)
+    spell_hidden = watch_state.to(device)
+    cell_state = torch.zeros_like(spell_hidden).to(device)
+    context = torch.zeros(watch_outputs.size(0), 1, spell_hidden.size(2)).to(device)
     if is_train:
         for di in range(target_length):
             spell_output, spell_hidden, cell_state, context = spell(
