@@ -84,7 +84,7 @@ def trainIters(args):
     charSet = CharSet(args['LANGUAGE'])
 
     watch = Watch(args['LAYER_SIZE'], args['HIDDEN_SIZE'], args['HIDDEN_SIZE'])
-    spell = Spell(args['LAYER_SIZE'], charSet.get_total_num(), args['HIDDEN_SIZE'])
+    spell = Spell(args['LAYER_SIZE'], args['HIDDEN_SIZE'], charSet.get_total_num())
     
     watch = nn.DataParallel(watch)
     spell = nn.DataParallel(spell)
