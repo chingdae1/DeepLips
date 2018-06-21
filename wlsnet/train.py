@@ -40,8 +40,6 @@ def train(watch_input_tensor, target_tensor,
     watch_input_tensor = watch_input_tensor.to(device)
     target_tensor = target_tensor.to(device)
     
-
-    print('train step')
     watch_optimizer.zero_grad()
     spell_optimizer.zero_grad()
 
@@ -85,7 +83,7 @@ def trainIters(args):
 
     watch = Watch(args['LAYER_SIZE'], args['HIDDEN_SIZE'], args['HIDDEN_SIZE'])
     spell = Spell(args['LAYER_SIZE'], args['HIDDEN_SIZE'], charSet.get_total_num())
-    
+
     watch = nn.DataParallel(watch)
     spell = nn.DataParallel(spell)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -123,6 +121,7 @@ def trainIters(args):
                         watch_optimizer, spell_optimizer,
                         criterion, True, charSet)
             avg_loss += loss
+            print('Batch : ', i + 1, '/', total_batch, ', ERROR in this minibatch: ', loss)
         
         watch = watch.eval()
         spell = spell.eval()
