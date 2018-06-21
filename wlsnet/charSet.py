@@ -100,7 +100,7 @@ class CharSet:
             self.__char_list = kr_list
         else:
             self.__char_list = en_list
-        _init_index_dict()
+        self._init_index_dict()
     
     def _init_index_dict(self):
         index_list = [i for i in range(len(self.char_list))]
