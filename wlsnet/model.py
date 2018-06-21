@@ -68,7 +68,7 @@ class Spell(nn.Module):
         self.attentionVideo = Attention(hidden_size, hidden_size)
         self.mlp = nn.Sequential(
             nn.Linear(hidden_size*2, hidden_size),
-            nn.BatchNorm1d(hidden_size)
+            nn.BatchNorm1d(hidden_size),
             nn.ReLU(),
             nn.Linear(hidden_size, 256),
             nn.BatchNorm1d(256),
