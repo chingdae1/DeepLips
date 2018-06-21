@@ -19,10 +19,11 @@ class Categorizer:
             new_dir_path = os.path.join(self.output_path, dir_name)
             if os.path.exists(new_dir_path) is False:
                 os.mkdir(new_dir_path)
-            new_file_name = all_video[idx].split('/')[-1].split('.')[0]
+
+            new_file_name = all_video[idx].split('/')[-2] + '_' + all_video[idx].split('/')[-1].split('.')[0]
             new_video_path = os.path.join(new_dir_path, new_file_name + '.mp4')
             new_text_path = os.path.join(new_dir_path, new_file_name + '.txt')
-            print('[' + str(idx) + '/' + str(len(all_video)) + ']')
+            print('Copy ' + new_file_name + '.mp4 [' + str(idx) + '/' + str(len(all_video)) + ']')
             shutil.copy2(all_video[idx], new_video_path)
             shutil.copy2(all_text[idx], new_text_path)
 
@@ -44,8 +45,8 @@ if __name__ == '__main__':
     output_path = sys.argv[2]
     boundary = sys.argv[3]
 
-    video_path = os.path.join(data_path, '*', '*.mp4')
-    text_path = os.path.join(data_path, '*', '*.txt')
+    video_path = os.path.join(data_path, '*', '*', '*.mp4')
+    text_path = os.path.join(data_path, '*', '*', '*.txt')
     all_video = sorted(glob.glob(video_path))
     all_text = sorted(glob.glob(text_path))
 
