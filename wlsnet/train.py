@@ -24,7 +24,6 @@ def arg_parser():
     parser.add_argument('--save_every', type=int, help='save every certain epoch', default=30)
     parser.add_argument('--learning_rate', type=float, help='learning rate')
     parser.add_argument('--language', type=str, help='language')
-    parser.add_argument('--reverse', type=bool, help='if data is reversed')
     parser.add_argument('--hidden_size', type=int, help='hidden dimension size', default=512)
     parser.add_argument('--layer_size', type=int, help='layer size', default=3)
 
@@ -85,8 +84,8 @@ def train(watch_input_tensor, target_tensor,
 def trainIters(args):
     charSet = CharSet(args.language)
 
-    watch = Watch(args.num_layers, args.hidden_size, args.hidden_size)
-    spell = Spell(args.num_layers, charSet.get_total_num(), args.hidden_size)
+    watch = Watch(args.layer_size, args.hidden_size, args.hidden_size)
+    spell = Spell(args.layer_size, charSet.get_total_num(), args.hidden_size)
     
     watch = nn.DataParallel(watch)
     spell = nn.DataParallel(spell)
@@ -100,7 +99,7 @@ def trainIters(args):
     spell_scheduler = optim.lr_scheduler.StepLR(spell_optimizer, step_size=args.learning_rate_decay_epoch, gamma=args.learning_rate_decay_ratio)
     criterion = nn.CrossEntropyLoss(charSet.get_index_of('<pad>'))
 
-    train_loader, eval_loader = get_dataloaders(args.path, args.bs, args.vmax, args.tmax, args.worker, args.reverse, args.validation_ratio)
+    train_loader, eval_loader = get_dataloaders(args.path, args.bs, args.vmax, args.tmax, args.worker, args.validation_ratio)
     # train_loader = DataLoader(dataset=dataset,
     #                     batch_size=batch_size,
     #                     shuffle=True)
