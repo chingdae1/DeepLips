@@ -132,8 +132,7 @@ class Spell(nn.Module):
         concatenated = torch.cat([input, context], dim=2)
         output, (hidden_state, cell_state) = self.lstm(concatenated, (hidden_state, cell_state))
         context = self.attentionVideo(hidden_state[-1], watch_outputs)
-        print(torch.cat([output, context], dim=2).size())
-        output = self.mlp(torch.cat([output, context], dim=2).squeeze(1))
+        output = self.mlp(torch.cat([output, context], dim=2).squeeze(1)).unsqueeze(1)
         
         return output, hidden_state, cell_state, context
 
