@@ -16,7 +16,7 @@ def arg_parser():
     parser.add_argument('--vmax', type=int, help='video tensor max length')
     parser.add_argument('--tmax', type=int, help='text tensor max length')
     parser.add_argument('--path', type=str, help='data path')
-    parser.add_argument('--bs', type=int, help='batch size' default=2)
+    parser.add_argument('--bs', type=int, help='batch size', default=2)
     parser.add_argument('--worker', type=int, help='the number of data loader worker', default=0)
     parser.add_argument('--validation_ratio', type=float, help='validation ratio', default=0.0001)
     parser.add_argument('--learning_rate_decay_epoch', type=int, help='learning rate decay per certain epoch')
