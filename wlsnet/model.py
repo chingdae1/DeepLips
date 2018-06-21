@@ -75,7 +75,7 @@ class Spell(nn.Module):
             nn.Linear(hidden_size, 256),
             nn.BatchNorm1d(256),
             nn.ReLU(),
-            nn.Linear(output_size)
+            nn.Linear(256, output_size)
         )
 
     
