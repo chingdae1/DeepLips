@@ -36,8 +36,7 @@ def train(watch_input_tensor, target_tensor,
         criterion, is_train, charSet):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    watch = watch.to(device)
-    spell = watch.to(device)
+    
     watch_input_tensor = watch_input_tensor.to(device)
     target_tensor = target_tensor.to(device)
     
@@ -90,7 +89,9 @@ def trainIters(args):
     
     watch = nn.DataParallel(watch)
     spell = nn.DataParallel(spell)
-
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    watch = watch.to(device)
+    spell = watch.to(device)
     
     watch_optimizer = optim.Adam(watch.parameters(),
                     lr=args['LEARNING_RATE'])
