@@ -25,11 +25,9 @@ class Watch(nn.Module):
         
         # assert len(size) == 4, 'video input size is wrong'
         # assert size[2:] == [120, 120], 'image size should 120 * 120'
-
         outputs = []
         for i in range(size[1] - 4):
             outputs.append(self.encoder(x[:, i:i+5, :, :]).unsqueeze(1))
-        outputs.reverse()
         x = torch.cat(outputs, dim=1)
         # self.lstm.flatten_parameters()
         outputs, states = self.lstm(x)
@@ -59,7 +57,7 @@ class Listen(nn.Module):
         return (outputs, states[0])
 
 class Spell(nn.Module):
-    def __init__(self, num_layers=3, output_size=40, hidden_size=512):
+    def __init__(self, num_layers, hidden_size, output_size):
         super(Spell, self).__init__()
         self.hidden_size = hidden_size
         self.output_size = output_size
@@ -68,7 +66,16 @@ class Spell(nn.Module):
         self.embedded = nn.Embedding(self.output_size, self.hidden_size)
         self.lstm = nn.LSTM(self.hidden_size*2, self.hidden_size, self.num_layers, batch_first=True)
         self.attentionVideo = Attention(hidden_size, hidden_size)
-        self.mlp = nn.Linear(hidden_size*2, output_size)
+        self.mlp = nn.Sequential(
+            nn.Linear(hidden_size*2, hidden_size),
+            nn.BatchNorm1d(hidden_size)
+            nn.ReLU(),
+            nn.Linear(hidden_size, 256),
+            nn.BatchNorm1d(256),
+            nn.ReLU(),
+            nn.Linear(output_size)
+        )
+
     
     def forward(self, input, hidden_state, cell_state, watch_outputs, context):
         '''
@@ -121,7 +128,6 @@ class Spell(nn.Module):
         '''
         input = self.embedded(input)
         concatenated = torch.cat([input, context], dim=2)
-        #self.lstm.flatten_parameters()
         output, (hidden_state, cell_state) = self.lstm(concatenated, (hidden_state, cell_state))
         context = self.attentionVideo(hidden_state[-1], watch_outputs)
         
