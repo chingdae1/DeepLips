@@ -13,7 +13,6 @@ class Watch(nn.Module):
         self.hidden_size = hidden_size
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
         self.encoder = Encoder()
-        self.is_reverse = is_reverse
 
     def forward(self, x):
         '''
