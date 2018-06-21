@@ -56,7 +56,6 @@ def train(watch_input_tensor, target_tensor,
     context = torch.zeros(watch_outputs.size(0), 1, spell_hidden.size(2)).to(device)
     if is_train:
         for di in range(target_length):
-            type(spell)
             spell_output, spell_hidden, cell_state, context = spell(spell_input, spell_hidden, cell_state, watch_outputs, context)
             topv, topi = spell_output.topk(1, dim=2)
             spell_input = target_tensor[:, di].long().unsqueeze(1)
@@ -91,7 +90,7 @@ def trainIters(args):
     spell = nn.DataParallel(spell)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     watch = watch.to(device)
-    spell = watch.to(device)
+    spell = spell.to(device)
     
     watch_optimizer = optim.Adam(watch.parameters(),
                     lr=args['LEARNING_RATE'])

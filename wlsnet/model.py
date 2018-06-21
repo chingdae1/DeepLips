@@ -77,6 +77,7 @@ class Spell(nn.Module):
             nn.ReLU(),
             nn.Linear(256, output_size)
         )
+
     
     def forward(self, input, hidden_state, cell_state, watch_outputs, context):
         '''
@@ -127,18 +128,11 @@ class Spell(nn.Module):
         hidden_state : 3-D torch Tensor
             size (num_layers, batch_size, hidden_size)
         '''
-        print(1, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         input = self.embedded(input)
-        print(2, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         concatenated = torch.cat([input, context], dim=2)
-        print(3, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-
         output, (hidden_state, cell_state) = self.lstm(concatenated, (hidden_state, cell_state))
-        print(4, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-
         context = self.attentionVideo(hidden_state[-1], watch_outputs)
-        print(5, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-
+        
         output = self.mlp(torch.cat([output, context], dim=2))
         
         return output, hidden_state, cell_state, context
