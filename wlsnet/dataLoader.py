@@ -38,7 +38,10 @@ def videoProcess(dir, videoMaxLen):
             break
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-    results[:len(tmp), :, :] = torch.from_numpy(np.concatenate(tmp, axis=0).reshape(-1, 120, 120))
+    try:
+        results[:len(tmp), :, :] = torch.from_numpy(np.concatenate(tmp, axis=0).reshape(-1, 120, 120))
+    except:
+        print(dir)
     cap.release()
     return results
 
