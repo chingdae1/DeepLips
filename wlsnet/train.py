@@ -7,6 +7,7 @@ from charSet import CharSet
 import numpy as np
 import sys
 import argparse
+import yaml
 
 torch.backends.cudnn.enabled = True
 
@@ -82,31 +83,31 @@ def train(watch_input_tensor, target_tensor,
     return loss.item() / target_length
 
 def trainIters(args):
-    charSet = CharSet(args.language)
+    charSet = CharSet(args['LANGUAGE'])
 
-    watch = Watch(args.layer_size, args.hidden_size, args.hidden_size)
-    spell = Spell(args.layer_size, charSet.get_total_num(), args.hidden_size)
+    watch = Watch(args['LAYER_SIZE'], args['HIDDEN_SIZE'], args['HIDDEN_SIZE'])
+    spell = Spell(args['LAYER_SIZE'], charSet.get_total_num(), args['HIDDEN_SIZE'])
     
     watch = nn.DataParallel(watch)
     spell = nn.DataParallel(spell)
 
     
     watch_optimizer = optim.Adam(watch.parameters(),
-                    lr=args.learning_rate)
+                    lr=args['LEARNING_RATE'])
     spell_optimizer = optim.Adam(spell.parameters(),
-                    lr=args.learning_rate)
-    watch_scheduler = optim.lr_scheduler.StepLR(watch_optimizer, step_size=args.learning_rate_decay_epoch, gamma=args.learning_rate_decay_ratio)
-    spell_scheduler = optim.lr_scheduler.StepLR(spell_optimizer, step_size=args.learning_rate_decay_epoch, gamma=args.learning_rate_decay_ratio)
+                    lr=args['LEARNING_RATE'])
+    watch_scheduler = optim.lr_scheduler.StepLR(watch_optimizer, step_size=args['LEARNING_RATE_DECAY_EPOCH'], gamma=args['LEARNING_RATE_DECAY_RATIO'])
+    spell_scheduler = optim.lr_scheduler.StepLR(spell_optimizer, step_size=args['LEARNING_RATE_DECAY_EPOCH'], gamma=args['LEARNING_RATE_DECAY_RATIO'])
     criterion = nn.CrossEntropyLoss(charSet.get_index_of('<pad>'))
 
-    train_loader, eval_loader = get_dataloaders(args.path, args.bs, args.vmax, args.tmax, args.worker, args.validation_ratio)
+    train_loader, eval_loader = get_dataloaders(args['PATH'], args['BS'], args['VMAX'], args['TMAX'], args['WORKER'], args['VALIDATION_RATIO'])
     # train_loader = DataLoader(dataset=dataset,
     #                     batch_size=batch_size,
     #                     shuffle=True)
     total_batch = len(train_loader)
     total_eval_batch = len(eval_loader)
 
-    for epoch in range(args.iter):
+    for epoch in range(args['ITER']):
         avg_loss = 0.0
         avg_eval_loss = 0.0
         watch_scheduler.step()
@@ -132,10 +133,11 @@ def trainIters(args):
         
         print('epoch:', epoch, ' train_loss:', float(avg_loss/total_batch))
         print('epoch:', epoch, ' eval_loss:', float(avg_eval_loss/total_eval_batch))
-        if epoch % save_every == 0 and epoch != 0:
+        if epoch % args['SAVE_EVERY'] == 0 and epoch != 0:
             torch.save(watch, 'watch{}.pt'.format(epoch))
             torch.save(spell, 'spell{}.pt'.format(epoch))
 
 if __name__ == '__main__':
-    args = arg_parser()
-    trainIters(args)
+    with open('len100.yaml', 'r') as f:
+        config = yaml.load(f)
+    trainIters(config['CONFIG'])
