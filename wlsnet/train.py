@@ -100,7 +100,7 @@ def trainIters(args):
     spell_scheduler = optim.lr_scheduler.StepLR(spell_optimizer, step_size=args['LEARNING_RATE_DECAY_EPOCH'], gamma=args['LEARNING_RATE_DECAY_RATIO'])
     criterion = nn.CrossEntropyLoss(ignore_index=charSet.get_index_of('<pad>'))
 
-    train_loader, eval_loader = get_dataloaders(args['PATH'], args['BS'], args['VMAX'], args['TMAX'], args['WORKER'], args['VALIDATION_RATIO'])
+    train_loader, eval_loader = get_dataloaders(args['PATH'], args['BS'], args['VMAX'], args['TMAX'], args['WORKER'], charSet, args['VALIDATION_RATIO'])
     # train_loader = DataLoader(dataset=dataset,
     #                     batch_size=batch_size,
     #                     shuffle=True)
