@@ -7,21 +7,20 @@ from glob import glob
 from charSet import CharSet
 
 class videoDataset(Dataset):
-    def __init__(self, path, videoMaxLen, txtMaxLen, is_reverse, language):
+    def __init__(self, path, videoMaxLen, txtMaxLen, language):
         self.queries = sorted(glob(os.path.join(path, '.mp4')))
         self.labels = sorted(glob(os.path.join(path, '.txt')))
         self.videoMaxLen = videoMaxLen
         self.txtMaxLen = txtMaxLen
         self.charSet = CharSet(language)
-        self.is_reverse
 
     def __len__(self):
         return len(self.queries)
 
     def __getitem__(self, idx):
-        return videoProcess(self.queries[idx], self.videoMaxLen, self.is_reverse), txtProcess(self.labels[idx], self.txtMaxLen, self.charSet)
+        return videoProcess(self.queries[idx], self.videoMaxLen), txtProcess(self.labels[idx], self.txtMaxLen, self.charSet)
 
-def videoProcess(dir, videoMaxLen, is_reverse):
+def videoProcess(dir, videoMaxLen):
     cap = cv2.VideoCapture(dir)
     tmp = []
     results = torch.zeros(videoMaxLen, 120, 120)
@@ -38,9 +37,7 @@ def videoProcess(dir, videoMaxLen, is_reverse):
             break
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-    if is_reverse:
-        tmp = np.flip(np.concatenate(tmp, axis=0).reshape(-1, 120, 120), 0)
-    results[:len(tmp), :, :] = torch.from_numpy(tmp)
+    results[:len(tmp), :, :] = torch.from_numpy(np.concatenate(tmp, axis=0).reshape(-1, 120, 120))
     cap.release()
     return results
 
@@ -57,9 +54,9 @@ def txtProcess(dir, txtMaxLen, charSet):
             raise Exception('too short txt max length')
     return torch.Tensor(tmp)
 
-def get_dataloaders(path, batch_size, videomax, txtmax, num_worker, is_reverse, charSet, ratio_of_validation):
+def get_dataloaders(path, batch_size, videomax, txtmax, num_worker, charSet, ratio_of_validation):
     num_workers = worker # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
-    train_dataset = videoDataset(path, videomax, txtmax, is_reverse, charSet)
+    train_dataset = videoDataset(path, videomax, txtmax, charSet)
     num_train = len(train_dataset)
     split_point = int(ratio_of_validation*num_train)
 

@@ -13,6 +13,7 @@ class Watch(nn.Module):
         self.hidden_size = hidden_size
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
         self.encoder = Encoder()
+        self.is_reverse = is_reverse
 
     def forward(self, x):
         '''
@@ -25,6 +26,8 @@ class Watch(nn.Module):
         
         # assert len(size) == 4, 'video input size is wrong'
         # assert size[2:] == [120, 120], 'image size should 120 * 120'
+        idx = torch.tensor([i for i in range(size[1]-1, -1, -1)])
+        x = x[:, idx, :, :]
         outputs = []
         for i in range(size[1] - 4):
             outputs.append(self.encoder(x[:, i:i+5, :, :]).unsqueeze(1))
