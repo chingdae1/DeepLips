@@ -55,7 +55,7 @@ def txtProcess(dir, txtMaxLen, charSet):
     return torch.Tensor(tmp)
 
 def get_dataloaders(path, batch_size, videomax, txtmax, num_worker, charSet, ratio_of_validation):
-    num_workers = worker # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
+    num_workers = num_worker # num of threads to load data, default is 0. if you use thread(>1), don't confuse evenif debug messages are reported asynchronously.
     train_dataset = videoDataset(path, videomax, txtmax, charSet)
     num_train = len(train_dataset)
     split_point = int(ratio_of_validation*num_train)
