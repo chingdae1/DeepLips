@@ -45,7 +45,7 @@ def videoProcess(dir, videoMaxLen):
 def txtProcess(dir, txtMaxLen, charSet):
     tmp = []
     with open(dir) as f:
-        tmp = [one_hot[i] for i in f.readline().split(':')[1].replace(' ', '').rstrip('\n')] + [charSet.get_index_of('<eos>')]
+        tmp = [charSet.get_index_of(i) for i in f.readline().split(':')[1].replace(' ', '').rstrip('\n')] + [charSet.get_index_of('<eos>')]
         
         if len(tmp) < txtMaxLen:
             tmp += [charSet.get_index_of('<pad>') for _ in range(txtMaxLen - len(tmp))]
