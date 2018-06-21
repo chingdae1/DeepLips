@@ -26,7 +26,7 @@ def arg_parser():
     parser.add_argument('--language', type=str, help='language')
     parser.add_argument('--reverse', type=bool, help='if data is reversed')
     parser.add_argument('--hidden_size', type=int, help='hidden dimension size', default=512)
-    parser.add_argument('--layer_size', type=int, help='layer size', defaul=3)
+    parser.add_argument('--layer_size', type=int, help='layer size', default=3)
 
     return parser.parse_args()
 
