@@ -51,7 +51,7 @@ def txtProcess(dir, txtMaxLen, charSet):
             tmp += [charSet.get_index_of('<pad>') for _ in range(txtMaxLen - len(tmp))]
         
         else:
-            print(tmp)
+            print(len(tmp))
             raise Exception('too short txt max length')
     return torch.Tensor(tmp)
 
