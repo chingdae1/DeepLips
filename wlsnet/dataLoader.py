@@ -8,12 +8,12 @@ from glob import glob
 from charSet import CharSet
 
 class videoDataset(Dataset):
-    def __init__(self, path, videoMaxLen, txtMaxLen, language):
-        self.queries = sorted(glob(os.path.join(path, '.mp4')))
-        self.labels = sorted(glob(os.path.join(path, '.txt')))
+    def __init__(self, path, videoMaxLen, txtMaxLen, charSet):
+        self.queries = sorted(glob(os.path.join(path, '*.mp4')))
+        self.labels = sorted(glob(os.path.join(path, '*.txt')))
         self.videoMaxLen = videoMaxLen
         self.txtMaxLen = txtMaxLen
-        self.charSet = CharSet(language)
+        self.charSet = charSet
 
     def __len__(self):
         return len(self.queries)

@@ -4,7 +4,7 @@ CONFIG:
   ITER: 50
   VMAX: 100
   TMAX: 45
-  PATH: '../../../data/data_english/data_categorized/100/*'
+  PATH: '../../../data/data_english/data_categorized/0/'
   BS: 8
   WORKER: 0
   VALIDATION_RATIO: 0.1
