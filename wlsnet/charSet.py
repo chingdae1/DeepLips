@@ -103,9 +103,9 @@ class CharSet:
         self._init_index_dict()
     
     def _init_index_dict(self):
-        index_list = [i for i in range(len(self.char_list))]
-        self.__index_of_str = dict(zip(self.char_list, index_list))
-        self.__char_of_index = dict(zip(index_list, self.char_list))
+        index_list = [i for i in range(len(self.__char_list))]
+        self.__index_of_str = dict(zip(self.__char_list, index_list))
+        self.__char_of_index = dict(zip(index_list, self.__char_list))
         self.__total_num = len(index_list)
 
     def get_index_of(self, string):
