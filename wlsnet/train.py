@@ -56,8 +56,8 @@ def train(watch_input_tensor, target_tensor,
     context = torch.zeros(watch_outputs.size(0), 1, spell_hidden.size(2)).to(device)
     if is_train:
         for di in range(target_length):
-            spell_output, spell_hidden, cell_state, context = spell(
-                spell_input, spell_hidden, cell_state, watch_outputs, context)
+            type(spell)
+            spell_output, spell_hidden, cell_state, context = spell(spell_input, spell_hidden, cell_state, watch_outputs, context)
             topv, topi = spell_output.topk(1, dim=2)
             spell_input = target_tensor[:, di].long().unsqueeze(1)
             

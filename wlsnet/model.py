@@ -77,7 +77,6 @@ class Spell(nn.Module):
             nn.ReLU(),
             nn.Linear(256, output_size)
         )
-
     
     def forward(self, input, hidden_state, cell_state, watch_outputs, context):
         '''
