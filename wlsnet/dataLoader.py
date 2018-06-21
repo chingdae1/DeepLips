@@ -1,4 +1,5 @@
 from torch.utils.data import Dataset, DataLoader
+from torch.utils.data.sampler import SubsetRandomSampler
 import torch
 import numpy as np
 import os
@@ -67,12 +68,12 @@ def get_dataloaders(path, batch_size, videomax, txtmax, num_worker, charSet, rat
 
     train_sampler = SubsetRandomSampler(train_idx) # Random sampling at every epoch without replacement in given indices
     val_sampler = SubsetRandomSampler(val_idx)
-    train_loader = torch.utils.data.DataLoader(
+    train_loader = DataLoader(
         train_dataset, batch_size=batch_size, sampler=train_sampler, num_workers=num_workers,
         pin_memory=True)
         # 'pin_memory=True' allows for you to use fast memory buffer with way of calling '.cuda(async=True)' function.
 
-    val_loader = torch.utils.data.DataLoader(
+    val_loader = DataLoader(
         train_dataset, batch_size=batch_size, sampler=val_sampler, num_workers=num_workers,
         pin_memory=True)
     return [train_loader, val_loader]

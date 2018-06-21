@@ -2,7 +2,7 @@ import torch
 from torch import nn, optim
 from dataLoader import get_dataloaders
 from model import Watch, Spell
-from torch.utils.data.sampler import SubsetRandomSampler
+
 from charSet import CharSet
 import numpy as np
 import sys
