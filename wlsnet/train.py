@@ -2,12 +2,12 @@ import torch
 from torch import nn, optim
 from dataLoader import get_dataloaders
 from model import Watch, Spell
-
 from charSet import CharSet
 import numpy as np
 import sys
 import argparse
 import yaml
+import Levenshtein as Lev
 
 torch.backends.cudnn.enabled = True
 
@@ -36,7 +36,7 @@ def train(watch_input_tensor, target_tensor,
         criterion, is_train, charSet):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
+    results = []
     watch_input_tensor = watch_input_tensor.to(device)
     target_tensor = target_tensor.to(device)
     
@@ -46,6 +46,7 @@ def train(watch_input_tensor, target_tensor,
     target_length = target_tensor.size(1)
 
     loss = 0
+    cer = 0
 
     watch_outputs, watch_state = watch(watch_input_tensor)
     spell_input = torch.tensor([[charSet.get_index_of('<sos>')]]).repeat(watch_outputs.size(0), 1).to(device)
@@ -55,15 +56,18 @@ def train(watch_input_tensor, target_tensor,
     if is_train:
         for di in range(target_length):
             spell_output, spell_hidden, cell_state, context = spell(spell_input, spell_hidden, cell_state, watch_outputs, context)
+            #topi (bs, 1, 1)
             topv, topi = spell_output.topk(1, dim=2)
             spell_input = target_tensor[:, di].long().unsqueeze(1)
             
             loss += criterion(spell_output.squeeze(1), target_tensor[:, di].long())
+            results.append(topi.cpu().squeeze(1))
         loss = loss.to(device)
         loss.backward()
 
         watch_optimizer.step()
         spell_optimizer.step()
+
     else:
         for di in range(target_length):
             spell_output, spell_hidden, cell_state, context = spell(
@@ -74,9 +78,20 @@ def train(watch_input_tensor, target_tensor,
             if int(target_tensor[0, di]) != charSet.get_index_of('<pad>'):
                 print('output : ', charSet.get_char_of(int(topi.squeeze(1)[0])), 'label : ', charSet.get_char_of(int(target_tensor[0, di])))
 
-            # loss += criterion(spell_output.squeeze(1), target_tensor[:, di].long())
-
-    return loss.item() / target_length
+            loss += criterion(spell_output.squeeze(1), target_tensor[:, di].long())
+            results.append(topi.cpu().squeeze(1))
+    
+    results = torch.cat(result, dim=1)
+    for batch in range(result.size(0)):
+        output = ''
+        label = ''
+        for index in range(target_length):
+            output += charSet.get_char_of(int(result[batch, index]))
+            label += charSet.get_char_of(int(target_tensor[batch, index]))
+        label = label.replace('<pad>', '').replace('<eos>', '@')
+        output = output.replace('<eos>', '@')[:output.find('@')].replace('<pad>', '$').replace('<sos>', '&')
+        cer += Lev.distance(output, label)
+    return loss.item() / target_length, cer / result.size(0)
 
 def trainIters(args):
     charSet = CharSet(args['LANGUAGE'])
@@ -108,6 +123,8 @@ def trainIters(args):
     for epoch in range(args['ITER']):
         avg_loss = 0.0
         avg_eval_loss = 0.0
+        avg_cer = 0.0
+        avg_eval_cer = 0.0
         watch_scheduler.step()
         spell_scheduler.step()
 
@@ -116,22 +133,26 @@ def trainIters(args):
 
         for i, (data, labels) in enumerate(train_loader):
 
-            loss = train(data, labels,
+            loss, cer = train(data, labels,
                         watch, spell,
                         watch_optimizer, spell_optimizer,
                         criterion, True, charSet)
             avg_loss += loss
+            avg_cer += cer
             print('Batch : ', i + 1, '/', total_batch, ', ERROR in this minibatch: ', loss)
+            print('Character error rate : ', cer)
         
         watch = watch.eval()
         spell = spell.eval()
 
         for k, (data, labels) in enumerate(eval_loader):
-            loss = train(data, labels, watch, spell, watch_optimizer, spell_optimizer, criterion, False, charSet)
+            loss, cer = train(data, labels, watch, spell, watch_optimizer, spell_optimizer, criterion, False, charSet)
             avg_eval_loss += loss
-        
+            avg_eval_cer += cer
         print('epoch:', epoch, ' train_loss:', float(avg_loss/total_batch))
-        print('epoch:', epoch, ' eval_loss:', float(avg_eval_loss/total_eval_batch))
+        print('epoch:', epoch, ' Average CER:', float(avg_cer/total_batch))
+        print('epoch:', epoch, ' Validation_loss:', float(avg_eval_loss/total_eval_batch))
+        print('epoch:', epoch, ' Average CER:', float(avg_eval_cer/total_eval_batch))
         if epoch % args['SAVE_EVERY'] == 0 and epoch != 0:
             torch.save(watch, 'watch{}.pt'.format(epoch))
             torch.save(spell, 'spell{}.pt'.format(epoch))
