@@ -3,7 +3,7 @@ CONFIG:
   LAYER_SIZE: 3
   ITER: 50
   VMAX: 100
-  TMAX: 70
+  TMAX: 800
   PATH: '../../../data/data_english/data_categorized/0/'
   BS: 8
   WORKER: 0
