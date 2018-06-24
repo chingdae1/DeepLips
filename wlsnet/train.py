@@ -81,17 +81,17 @@ def train(watch_input_tensor, target_tensor,
             loss += criterion(spell_output.squeeze(1), target_tensor[:, di].long())
             results.append(topi.cpu().squeeze(1))
     
-    results = torch.cat(result, dim=1)
-    for batch in range(result.size(0)):
+    results = torch.cat(results, dim=1)
+    for batch in range(results.size(0)):
         output = ''
         label = ''
         for index in range(target_length):
-            output += charSet.get_char_of(int(result[batch, index]))
+            output += charSet.get_char_of(int(results[batch, index]))
             label += charSet.get_char_of(int(target_tensor[batch, index]))
         label = label.replace('<pad>', '').replace('<eos>', '@')
         output = output.replace('<eos>', '@')[:output.find('@')].replace('<pad>', '$').replace('<sos>', '&')
         cer += Lev.distance(output, label)
-    return loss.item() / target_length, cer / result.size(0)
+    return loss.item() / target_length, cer / results.size(0)
 
 def trainIters(args):
     charSet = CharSet(args['LANGUAGE'])

@@ -5,11 +5,11 @@ CONFIG:
   VMAX: 100
   TMAX: 800
   PATH: '../../../data/data_english/data_categorized/0/'
-  BS: 8
+  BS: 16
   WORKER: 0
   VALIDATION_RATIO: 0.1
   LEARNING_RATE_DECAY_EPOCH: 100
   LEARNING_RATE_DECAY_RATIO: 0.1
-  SAVE_EVERY: 5
+  SAVE_EVERY: 1
   LEARNING_RATE: 0.001
   LANGUAGE: 'en'
