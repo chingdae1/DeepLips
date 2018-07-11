@@ -55,9 +55,9 @@ def get_data_loader(path, bs, validationratio, videomaxlen):
     val_dataset = VideoDataSet(files[-start:], videomaxlen)
 
     train_loader = DataLoader(
-        train_dataset, batch_size=bs, shuffle=True, pin_memory=True)
+        train_dataset, batch_size=bs, shuffle=True, pin_memory=True, num_workers=3)
 
     val_loader = DataLoader(
-        val_dataset, batch_size=bs, shuffle=True, pin_memory=True)
+        val_dataset, batch_size=bs, shuffle=True, pin_memory=True, num_workers=8)
 
     return train_loader, val_loader
