@@ -1,11 +1,12 @@
 from dataloader import get_data_loader
-from model import CAE
 import os
 import torch
 from torch import nn, optim
 import argparse
 import yaml
 import nsml
+import importlib
+
 from nsml import DATASET_PATH, GPU_NUM, HAS_DATASET, IS_ON_NSML
 
 torch.backends.cudnn.enabled = True
@@ -61,6 +62,7 @@ def arg_parser():
     parser.add_argument('--load', help='load trained model')
     parser.add_argument('--target', type=int,help='target size')
     parser.add_argument('--input', type=int, help='input size')
+    parser.add_argument('--model', type=str, help='model to train')
 
     return parser.parse_args()
 
@@ -70,7 +72,8 @@ def train(configs, args):
     if args.load:
         model = torch.load(args.load)
     else:
-        model = CAE()
+        model = importlib.import_module("model.{}".format(args.model))
+        model = model.CAE()
 
     bind_model(model)
 
@@ -94,7 +97,7 @@ def train(configs, args):
         for i, data in enumerate(train_dataset):
             loss = train_iter(model, data, criterion, optimizer, args.target, args.input)
             avg_loss += loss
-            print('Batch : ', i + 1, '/', train_size, ', ERROR in this minibatch: ', loss)
+            print('Epoch :', epoch, ', Batch : ', i + 1, '/', train_size, ', ERROR in this minibatch: ', loss)
         
         if epoch % configs['SAVE_EVERY'] == 0 and epoch != 0:
             nsml.save(epoch)
