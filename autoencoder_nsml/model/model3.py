@@ -41,12 +41,12 @@ class CAE(nn.Module):
         )
 
         self.fc = nn.Sequential(
-            nn.Linear(1536, 1024)
+            nn.Linear(512, 512)
         )
 
         self.fc2 = nn.Sequential(
             nn.ReLU(),
-            nn.Linear(1024, 1536),
+            nn.Linear(512, 512),
             nn.ReLU()
         )
 
