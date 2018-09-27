@@ -126,11 +126,12 @@ def face_crop(vc, args, vw_face=None, vw_lip=None):
                 roiX2 = landmarks[66][0] + margin if landmarks[66][0] + margin < bgr_img.shape[1] else bgr_img.shape[1]
                 roiY2 = landmarks[66][1] + margin if landmarks[66][1] + margin < bgr_img.shape[0] else bgr_img.shape[0]
                 # img_lip = bgr_img[roiY1:roiY2, roiX1:roiX2].copy()
+                l,t,r,b = bboxes
+
                 img_face = bgr_img_origin[t*2:b*2, l*2:r*2].copy()
                 img_lip = bgr_img_origin[roiY1*2:roiY2*2, roiX1*2:roiX2*2].copy()
                 img_face = cv2.resize(img_face, (64,64))
                 img_lip = cv2.resize(img_lip, (120,120))
-                l,t,r,b = bboxes
                 
                 if vw_face is not None:
                     vw_face.write(img_face)
